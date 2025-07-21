@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lat/Long Converter</title>
+<style>
+body { font-family: Arial, sans-serif; margin: 2em; }
+input[type=text] { width: 100%; padding: 0.5em; }
+button { padding: 0.5em 1em; margin-top: 1em; }
+#result { margin-top: 1em; font-weight: bold; }
+</style>
+</head>
+<body>
+<h1>Convert DMS to Decimal Degrees</h1>
+<p>Enter coordinates like <code>N53°53.05' / W122°40.65'</code></p>
+<input id="input" type="text" value="N53°53.05' / W122°40.65'" />
+<button onclick="convert()">Convert</button>
+<div id="result"></div>
+<script>
+function convert() {
+    const val = document.getElementById('input').value;
+    const p1 = '([NS])(\\d+)\\D+(\\d+\\.\\d+)';
+    const p2 = '\\D*([EW])(\\d+)\\D+(\\d+\\.\\d+)';
+    const regex = new RegExp(p1 + p2, 'i');
+    const match = val.match(regex);
+    if (!match) {
+        document.getElementById('result').textContent = 'Invalid format';
+        return;
+    }
+    const latDeg = parseFloat(match[2]);
+    const latMin = parseFloat(match[3]);
+    const lonDeg = parseFloat(match[5]);
+    const lonMin = parseFloat(match[6]);
+    const lat = (match[1].toUpperCase() === 'S' ? -1 : 1) * (latDeg + latMin/60);
+    const lon = (match[4].toUpperCase() === 'W' ? -1 : 1) * (lonDeg + lonMin/60);
+    document.getElementById('result').textContent = `Decimal: ${lat.toFixed(6)}, ${lon.toFixed(6)}`;
+}
+convert();
+</script>
+</body>
+</html>
