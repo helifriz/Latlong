@@ -55,7 +55,10 @@ function searchICAO() {
     }
     const info = airportDB[code];
     if (info) {
-        document.getElementById('icaoResult').textContent = `Lat: ${info.lat}, Lon: ${info.lon}, Elevation: ${info.elev} ft`;
+        const link = `https://skyvector.com/airport/${code}`;
+        document.getElementById('icaoResult').innerHTML =
+            `Lat: ${info.lat}, Lon: ${info.lon}, Elevation: ${info.elev} ft - ` +
+            `<a href="${link}" target="_blank">View on SkyVector</a>`;
     } else {
         document.getElementById('icaoResult').textContent = 'ICAO code not found';
     }
