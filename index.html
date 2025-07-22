@@ -21,20 +21,39 @@ button { padding: 0.5em 1em; margin-top: 1em; }
 <script>
 function convert() {
     const val = document.getElementById('input').value;
-    const p1 = '([NS])(\\d+)\\D+(\\d+\\.\\d+)';
-    const p2 = '\\D*([EW])(\\d+)\\D+(\\d+\\.\\d+)';
-    const regex = new RegExp(p1 + p2, 'i');
+    const regex = /([NS])(\d+)\D+(\d+\.?\d*)\D*([EW])(\d+)\D+(\d+\.?\d*)/i;
     const match = val.match(regex);
     if (!match) {
         document.getElementById('result').textContent = 'Invalid format';
         return;
     }
-    const latDeg = parseFloat(match[2]);
-    const latMin = parseFloat(match[3]);
-    const lonDeg = parseFloat(match[5]);
-    const lonMin = parseFloat(match[6]);
-    const lat = (match[1].toUpperCase() === 'S' ? -1 : 1) * (latDeg + latMin/60);
-    const lon = (match[4].toUpperCase() === 'W' ? -1 : 1) * (lonDeg + lonMin/60);
+
+    function parseCoord(hem, degStr, minStr) {
+        const deg = parseFloat(degStr);
+        let minutes = 0;
+        let seconds = 0;
+        if (minStr.includes('.')) {
+            const parts = minStr.split('.');
+            minutes = parseInt(parts[0], 10);
+            const sec = parseFloat(parts[1]);
+            if (!isNaN(sec) && sec < 60) {
+                seconds = sec;
+            } else {
+                minutes = parseFloat(minStr);
+            }
+        } else {
+            minutes = parseInt(minStr, 10);
+        }
+
+        let dec = deg + minutes / 60 + seconds / 3600;
+        if (hem.toUpperCase() === 'S' || hem.toUpperCase() === 'W') {
+            dec = -dec;
+        }
+        return dec;
+    }
+
+    const lat = parseCoord(match[1], match[2], match[3]);
+    const lon = parseCoord(match[4], match[5], match[6]);
     document.getElementById('result').textContent = `Decimal: ${lat.toFixed(6)}, ${lon.toFixed(6)}`;
 }
 
