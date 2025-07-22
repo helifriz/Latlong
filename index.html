@@ -9,7 +9,6 @@ body { font-family: Arial, sans-serif; margin: 2em; }
 input[type=text] { width: 100%; padding: 0.5em; }
 button { padding: 0.5em 1em; margin-top: 1em; }
 #result { margin-top: 1em; font-weight: bold; }
-#icaoResult { margin-top: 1em; font-weight: bold; }
 </style>
 </head>
 <body>
@@ -19,68 +18,7 @@ button { padding: 0.5em 1em; margin-top: 1em; }
 <button onclick="convert()">Convert</button>
 <div id="result"></div>
 
-<h2>Find Airport by ICAO Code</h2>
-<input id="icao" type="text" placeholder="Enter ICAO code (e.g., KJFK)" />
-<button onclick="searchICAO()">Search</button>
-<div id="icaoResult"></div>
-
-<script src="https://raw.githubusercontent.com/papaparse/papaparse/master/papaparse.min.js"></script>
 <script>
-// Attempts to load airport data from the internet first. If that fails,
-// the local file in `data/airports.dat` is used as a fallback.
-let airportDB = null;
-
-function loadAirportData() {
-    const remote = 'https://raw.githubusercontent.com/jpatokal/openflights/master/data/airports.dat';
-    const local = 'data/airports.dat';
-
-    function parse(text) {
-        const data = Papa.parse(text.trim()).data;
-        airportDB = {};
-        data.forEach(row => {
-            const icao = row[5];
-            if (icao) {
-                airportDB[icao.toUpperCase()] = {
-                    lat: parseFloat(row[6]),
-                    lon: parseFloat(row[7]),
-                    elev: parseFloat(row[8])
-                };
-            }
-        });
-    }
-
-    fetch(remote)
-        .then(resp => {
-            if (!resp.ok) throw new Error('remote fetch failed');
-            return resp.text();
-        })
-        .catch(() => fetch(local).then(r => {
-            if (!r.ok) throw new Error('local fetch failed');
-            return r.text();
-        }))
-        .then(parse)
-        .catch(err => {
-            document.getElementById('icaoResult').textContent = 'Unable to load airport data: ' + err.message;
-        });
-}
-
-function searchICAO() {
-    const code = document.getElementById('icao').value.trim().toUpperCase();
-    if (!airportDB) {
-        document.getElementById('icaoResult').textContent = 'Loading airport data...';
-        return;
-    }
-    const info = airportDB[code];
-    if (info) {
-        const link = `https://skyvector.com/airport/${code}`;
-        document.getElementById('icaoResult').innerHTML =
-            `Lat: ${info.lat}, Lon: ${info.lon}, Elevation: ${info.elev} ft - ` +
-            `<a href="${link}" target="_blank">View on SkyVector</a>`;
-    } else {
-        document.getElementById('icaoResult').textContent = 'ICAO code not found';
-    }
-}
-
 function convert() {
     const val = document.getElementById('input').value;
     const p1 = '([NS])(\\d+)\\D+(\\d+\\.\\d+)';
@@ -100,7 +38,6 @@ function convert() {
     document.getElementById('result').textContent = `Decimal: ${lat.toFixed(6)}, ${lon.toFixed(6)}`;
 }
 
-loadAirportData();
 convert();
 </script>
 </body>
