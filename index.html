@@ -54,7 +54,7 @@ function convert() {
 
     const lat = parseCoord(match[1], match[2], match[3]);
     const lon = parseCoord(match[4], match[5], match[6]);
-    document.getElementById('result').textContent = `Decimal: ${lat.toFixed(6)}, ${lon.toFixed(6)}`;
+    document.getElementById('result').textContent = `Decimal: ${lat.toFixed(4)}, ${lon.toFixed(4)}`;
 }
 
 convert();
