@@ -13,10 +13,8 @@ body {
     align-items: center;
     text-align: center;
 }
-header {
-    background-color: #e6f2ff;
-    width: 100%;
-    padding: 1em 0;
+.title {
+    color: blue;
     margin-bottom: 1em;
 }
 .dms-input {
@@ -28,9 +26,7 @@ button { padding: 0.5em 1em; margin-top: 1em; }
 </style>
 </head>
 <body>
-<header>
-<h1>Convert DMS to Decimal Degrees</h1>
-</header>
+<h1 class="title">Convert DMS to Decimal Degrees</h1>
 <div class="dms-input">
     <label>Latitude (N):
         <input id="latDeg" type="text" inputmode="numeric" maxlength="2" placeholder="Deg" value="53" data-next="latMin" />
