@@ -15,22 +15,35 @@ button { padding: 0.5em 1em; margin-top: 1em; }
 <h1>Convert DMS to Decimal Degrees</h1>
 <div class="dms-input">
     <label>Latitude (N):
-        <input id="latDeg" type="number" placeholder="Deg" value="53" />
-        <input id="latMin" type="number" placeholder="Min" value="53" />
-        <input id="latSec" type="number" placeholder="Sec" value="5" />
+        <input id="latDeg" type="text" inputmode="numeric" maxlength="2" placeholder="Deg" value="53" data-next="latMin" />
+        <input id="latMin" type="text" inputmode="numeric" maxlength="2" placeholder="Min" value="53" data-next="latSec" />
+        <input id="latSec" type="text" inputmode="numeric" maxlength="2" placeholder="Sec" value="5" data-next="lonDeg" />
     </label>
 </div>
 <div class="dms-input">
     <label>Longitude (W):
-        <input id="lonDeg" type="number" placeholder="Deg" value="122" />
-        <input id="lonMin" type="number" placeholder="Min" value="40" />
-        <input id="lonSec" type="number" placeholder="Sec" value="65" />
+        <input id="lonDeg" type="text" inputmode="numeric" maxlength="3" placeholder="Deg" value="122" data-next="lonMin" />
+        <input id="lonMin" type="text" inputmode="numeric" maxlength="2" placeholder="Min" value="40" data-next="lonSec" />
+        <input id="lonSec" type="text" inputmode="numeric" maxlength="2" placeholder="Sec" value="65" />
     </label>
 </div>
 <button onclick="convert()">Convert</button>
 <div id="result"></div>
 
 <script>
+// Automatically focus the next field once the maximum length is reached
+document.querySelectorAll('.dms-input input').forEach(inp => {
+    inp.addEventListener('input', e => {
+        const max = e.target.getAttribute('maxlength');
+        if (max && e.target.value.length >= max) {
+            const next = e.target.dataset.next;
+            if (next) {
+                document.getElementById(next).focus();
+            }
+        }
+    });
+});
+
 function convert() {
     const latDeg = parseFloat(document.getElementById('latDeg').value) || 0;
     const latMin = parseFloat(document.getElementById('latMin').value) || 0;
