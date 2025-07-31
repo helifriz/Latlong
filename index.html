@@ -28,9 +28,11 @@ button { padding: 0.5em 1em; margin-top: 1em; }
     </label>
 </div>
 <button onclick="convert()">Convert</button>
+<button onclick="openMap()">Open in Google Maps</button>
 <div id="result"></div>
 
 <script>
+let lastLat, lastLon;
 // Automatically focus the next field once the maximum length is reached
 document.querySelectorAll('.dms-input input').forEach(inp => {
     inp.addEventListener('input', e => {
@@ -55,7 +57,17 @@ function convert() {
     const lat = latDeg + latMin / 60 + latSec / 3600;
     const lon = -(lonDeg + lonMin / 60 + lonSec / 3600);
 
+    lastLat = lat;
+    lastLon = lon;
+
     document.getElementById('result').textContent = `Decimal: ${lat.toFixed(4)}, ${lon.toFixed(4)}`;
+}
+
+function openMap() {
+    if (typeof lastLat !== 'undefined' && typeof lastLon !== 'undefined') {
+        const url = `https://www.google.com/maps?q=${lastLat},${lastLon}`;
+        window.open(url, '_blank');
+    }
 }
 
 convert();
