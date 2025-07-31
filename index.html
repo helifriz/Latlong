@@ -29,7 +29,16 @@ button { padding: 0.5em 1em; margin-top: 1em; }
 </div>
 <button onclick="convert()">Convert</button>
 <button onclick="openMap()">Open in Google Maps</button>
-<div id="result"></div>
+<div id="result">
+    <div>
+        Latitude: <span id="decimalLat"></span>
+        <button onclick="copyToClipboard('decimalLat', this)">Copy</button>
+    </div>
+    <div>
+        Longitude: <span id="decimalLon"></span>
+        <button onclick="copyToClipboard('decimalLon', this)">Copy</button>
+    </div>
+</div>
 
 <script>
 let lastLat, lastLon;
@@ -64,7 +73,8 @@ function convert() {
     lastLat = lat;
     lastLon = lon;
 
-    document.getElementById('result').textContent = `Decimal: ${lat.toFixed(4)}, ${lon.toFixed(4)}`;
+    document.getElementById('decimalLat').textContent = lat.toFixed(4);
+    document.getElementById('decimalLon').textContent = lon.toFixed(4);
 }
 
 function openMap() {
@@ -72,6 +82,17 @@ function openMap() {
         const url = `https://www.google.com/maps?q=${lastLat.toFixed(4)},${lastLon.toFixed(4)}`;
         window.open(url, '_blank');
     }
+}
+
+function copyToClipboard(elementId, btn) {
+    const text = document.getElementById(elementId).textContent;
+    navigator.clipboard.writeText(text).then(() => {
+        const original = btn.textContent;
+        btn.textContent = 'Copied!';
+        setTimeout(() => {
+            btn.textContent = original;
+        }, 1000);
+    });
 }
 
 convert();
