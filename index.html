@@ -6,54 +6,42 @@
 <title>Lat/Long Converter</title>
 <style>
 body { font-family: Arial, sans-serif; margin: 2em; }
-input[type=text] { width: 100%; padding: 0.5em; }
+.dms-input input { width: 4em; padding: 0.5em; margin-right: 0.3em; }
 button { padding: 0.5em 1em; margin-top: 1em; }
 #result { margin-top: 1em; font-weight: bold; }
 </style>
 </head>
 <body>
 <h1>Convert DMS to Decimal Degrees</h1>
-<p>Enter coordinates like <code>N53°53.05' / W122°40.65'</code></p>
-<input id="input" type="text" value="N53°53.05' / W122°40.65'" />
+<div class="dms-input">
+    <label>Latitude (N):
+        <input id="latDeg" type="number" placeholder="Deg" value="53" />
+        <input id="latMin" type="number" placeholder="Min" value="53" />
+        <input id="latSec" type="number" placeholder="Sec" value="5" />
+    </label>
+</div>
+<div class="dms-input">
+    <label>Longitude (W):
+        <input id="lonDeg" type="number" placeholder="Deg" value="122" />
+        <input id="lonMin" type="number" placeholder="Min" value="40" />
+        <input id="lonSec" type="number" placeholder="Sec" value="65" />
+    </label>
+</div>
 <button onclick="convert()">Convert</button>
 <div id="result"></div>
 
 <script>
 function convert() {
-    const val = document.getElementById('input').value;
-    const regex = /([NS])(\d+)\D+(\d+\.?\d*)\D*([EW])(\d+)\D+(\d+\.?\d*)/i;
-    const match = val.match(regex);
-    if (!match) {
-        document.getElementById('result').textContent = 'Invalid format';
-        return;
-    }
+    const latDeg = parseFloat(document.getElementById('latDeg').value) || 0;
+    const latMin = parseFloat(document.getElementById('latMin').value) || 0;
+    const latSec = parseFloat(document.getElementById('latSec').value) || 0;
+    const lonDeg = parseFloat(document.getElementById('lonDeg').value) || 0;
+    const lonMin = parseFloat(document.getElementById('lonMin').value) || 0;
+    const lonSec = parseFloat(document.getElementById('lonSec').value) || 0;
 
-    function parseCoord(hem, degStr, minStr) {
-        const deg = parseFloat(degStr);
-        let minutes = 0;
-        let seconds = 0;
-        if (minStr.includes('.')) {
-            const parts = minStr.split('.');
-            minutes = parseInt(parts[0], 10);
-            const sec = parseFloat(parts[1]);
-            if (!isNaN(sec) && sec < 60) {
-                seconds = sec;
-            } else {
-                minutes = parseFloat(minStr);
-            }
-        } else {
-            minutes = parseInt(minStr, 10);
-        }
+    const lat = latDeg + latMin / 60 + latSec / 3600;
+    const lon = -(lonDeg + lonMin / 60 + lonSec / 3600);
 
-        let dec = deg + minutes / 60 + seconds / 3600;
-        if (hem.toUpperCase() === 'S' || hem.toUpperCase() === 'W') {
-            dec = -dec;
-        }
-        return dec;
-    }
-
-    const lat = parseCoord(match[1], match[2], match[3]);
-    const lon = parseCoord(match[4], match[5], match[6]);
     document.getElementById('result').textContent = `Decimal: ${lat.toFixed(4)}, ${lon.toFixed(4)}`;
 }
 
