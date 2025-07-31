@@ -69,7 +69,7 @@ function convert() {
 
 function openMap() {
     if (typeof lastLat !== 'undefined' && typeof lastLon !== 'undefined') {
-        const url = `https://www.google.com/maps?q=${lastLat},${lastLon}`;
+        const url = `https://www.google.com/maps?q=${lastLat.toFixed(4)},${lastLon.toFixed(4)}`;
         window.open(url, '_blank');
     }
 }
