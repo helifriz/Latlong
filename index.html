@@ -35,6 +35,10 @@ button { padding: 0.5em 1em; margin-top: 1em; }
 let lastLat, lastLon;
 // Automatically focus the next field once the maximum length is reached
 document.querySelectorAll('.dms-input input').forEach(inp => {
+    inp.addEventListener('focus', e => {
+        e.target.select();
+    });
+
     inp.addEventListener('input', e => {
         const max = e.target.getAttribute('maxlength');
         if (max && e.target.value.length >= max) {
