@@ -5,14 +5,32 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Lat/Long Converter</title>
 <style>
-body { font-family: Arial, sans-serif; margin: 2em; }
+body {
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    margin: 2em;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+header {
+    background-color: #e6f2ff;
+    width: 100%;
+    padding: 1em 0;
+    margin-bottom: 1em;
+}
+.dms-input {
+    margin-bottom: 0.5em;
+}
 .dms-input input { width: 4em; padding: 0.5em; margin-right: 0.3em; }
 button { padding: 0.5em 1em; margin-top: 1em; }
 #result { margin-top: 1em; font-weight: bold; }
 </style>
 </head>
 <body>
+<header>
 <h1>Convert DMS to Decimal Degrees</h1>
+</header>
 <div class="dms-input">
     <label>Latitude (N):
         <input id="latDeg" type="text" inputmode="numeric" maxlength="2" placeholder="Deg" value="53" data-next="latMin" />
